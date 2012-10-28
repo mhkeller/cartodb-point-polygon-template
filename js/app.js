@@ -1,4 +1,3 @@
-var map;
 (function(){
 	// Global table and map style vars
     var userName = 'zerocool'
