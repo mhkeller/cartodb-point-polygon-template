@@ -1,3 +1,4 @@
+var map;
 (function(){
 	// Global table and map style vars
     var userName = 'zerocool'
@@ -14,6 +15,8 @@
       , mapCanvas = 'mapCanvas'
       , $mapCanvas = $('#mapCanvas')
       , $vlt = $('#pfx_volette')
+      , $adrsInput = $('#pfx_inputBtn')
+      , $adrsGo = $('#pfx_inputField')
         // make your map
       , map = new L.Map(mapCanvas).setView(new L.LatLng(38.651198, -98.506714), defaultZoom)
         // If you don't want Stamen Tiles, uncomment these next two lines and comment out the Stamen line
@@ -205,6 +208,50 @@
       }else{
         ptTable.setQuery("SELECT cartodb_id," + pointTableActiveCols + ",the_geom_webmercator,ST_ASGEOJSON(the_geom) as geometry FROM " + pointTable);
       }
-  });
+    });
+
+    // BEGIN GEOCODING
+    var geocoder
+      , firstRun = true
+      , markerGroup;
+    geocoder = new google.maps.Geocoder();
+    var geoCode = function(address){
+      geocoder.geocode( { 'address': address}, function(results, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+            var lat = results[0].geometry.location.lat()
+            , lng = results[0].geometry.location.lng()
+            , latLng = new L.LatLng(lat, lng);
+            map.panTo(latLng);
+            // Set the zoom to whatever you want.
+            // the higher the number the greater the zoom.
+            map.setZoom(8);
+            
+            // Optional, place a marker
+            if (firstRun == false){
+              map.removeLayer(markerGroup)
+            }
+
+            var marker = L.marker([lat, lng]);
+            markerGroup = L.layerGroup([marker]);
+            map.addLayer(markerGroup);
+            firstRun = false;
+        
+          } else {
+            //console.log('Geocder fail: ' + status)
+          }
+        });
+    }
+    // Geocoding buttons
+    $adrsInput.click(function(){
+      var addrs = $adrsGo.val();
+      geoCode(addrs);
+    });
+    // also enable the button when you hit return
+    $(document).keydown(function(e) {
+      if (e.keyCode==13) { // return key
+          $adrsInput.trigger('click');
+        }
+    }); // End geocoding
+
 
 })();
