@@ -7,5 +7,7 @@ This is a templatefor a cartoDB client that includes support for interactive poi
 
 Most eveything is editable in index.html (legend, hover window textfields, buttons), app.js (account, table and layer information, and geocoding), and appUI.js (hover window behavior, textfield stuff).
 
+Demo: <a href="http://mhkeller.github.com/cartodb-point-polygon-template/" target="_blank">http://mhkeller.github.com/cartodb-point-polygon-template</a>
+
 
 Let me know if you use it / have any changes. @mhkeller
